@@ -1,8 +1,16 @@
 const { Pool } = require("pg");
 require("dotenv").config();
 
+// 🔍 DEBUG CHECK: Confirms if dotenvx or dotenv loaded your keys successfully
+console.log("👉 [DEBUG] DATABASE_URL present:", !!process.env.DATABASE_URL);
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL
+});
+
+// 👇 CLUADE'S FIX — Captures connection errors so they never crash your process
+pool.on("error", (err) => {
+    console.error("⚠️ [POOL GUARD] Unexpected idle client error handled safely:", err.message);
 });
 
 // ==========================================
@@ -24,7 +32,7 @@ async function initializeDatabase() {
         await seedDefaultTasks();
 
     } catch (err) {
-        console.error("❌ Database initialization failed:", err.message);
+        console.error("❌ Database initialization failed safely:", err.message);
     }
 }
 
@@ -65,7 +73,7 @@ async function seedDefaultTasks() {
         console.log("✅ Three default tasks seeded successfully!");
 
     } catch (err) {
-        console.error("❌ Seed failed:", err.message);
+        console.error("❌ Seed failed safely:", err.message);
     }
 }
 
@@ -73,22 +81,13 @@ async function seedDefaultTasks() {
 // READ OPERATIONS
 // ==========================================
 
-// Get all tasks
 async function getAllTasks() {
-    const result = await pool.query(
-        "SELECT * FROM tasks ORDER BY id"
-    );
-
+    const result = await pool.query("SELECT * FROM tasks ORDER BY id");
     return result.rows;
 }
 
-// Get one task by ID
 async function getTaskById(id) {
-    const result = await pool.query(
-        "SELECT * FROM tasks WHERE id = $1",
-        [id]
-    );
-
+    const result = await pool.query("SELECT * FROM tasks WHERE id = $1", [id]);
     return result.rows[0];
 }
 
@@ -96,15 +95,11 @@ async function getTaskById(id) {
 // CREATE OPERATION
 // ==========================================
 
-// Create a new task
 async function createTask(title) {
     const result = await pool.query(
-        `INSERT INTO tasks (title, done)
-         VALUES ($1, $2)
-         RETURNING *`,
+        `INSERT INTO tasks (title, done) VALUES ($1, $2) RETURNING *`,
         [title, 0]
     );
-
     return result.rows[0];
 }
 
@@ -112,16 +107,11 @@ async function createTask(title) {
 // UPDATE OPERATION
 // ==========================================
 
-// Update an existing task
 async function updateTask(id, title, done) {
     const result = await pool.query(
-        `UPDATE tasks
-         SET title = $1, done = $2
-         WHERE id = $3
-         RETURNING *`,
+        `UPDATE tasks SET title = $1, done = $2 WHERE id = $3 RETURNING *`,
         [title, done, id]
     );
-
     return result.rows[0];
 }
 
@@ -129,23 +119,22 @@ async function updateTask(id, title, done) {
 // DELETE OPERATION
 // ==========================================
 
-// Delete an existing task
 async function deleteTask(id) {
     const result = await pool.query(
-        `DELETE FROM tasks
-         WHERE id = $1
-         RETURNING *`,
+        `DELETE FROM tasks WHERE id = $1 RETURNING *`,
         [id]
     );
-
     return result.rows[0];
 }
 
 // ==========================================
-// START DATABASE INITIALIZATION
+// START DATABASE INITIALIZATION (PROTECTED INVOKER)
 // ==========================================
 
-initializeDatabase();
+// Fire and catch errors cleanly on boot, ensuring Express stays fully operational
+initializeDatabase().catch(err => {
+    console.error("⚠️ [THREAD GUARD] Initial connection dropped, keeping runtime server alive.");
+});
 
 // ==========================================
 // EXPORT DATABASE REPOSITORY

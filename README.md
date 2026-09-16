@@ -71,6 +71,8 @@ This track is being built in parallel with Track 2 and captures the AI-fluency s
 | **BE-05 — The Polite Scraper** | Week 5 | ✅ Completed | Rate-limited, polite scraping pipeline, Zod-validated structured data extraction, generated PDF summary report | Node.js web scraping, Zod schema validation, PDF report generation, nested technical documentation |
 | **BE-07 — Put an LLM Behind Your API** | Week 6 | ⏳ In Progress | OpenAI SDK wired through OpenRouter's free routing pathway, Stage 0 connectivity script (`src/llm/hello.js`) | OpenAI SDK, OpenRouter, Node.js module/environment debugging |
 
+| **Assignment A7 — Your First Background Job** | Week 6 | ✅ Completed | Out-of-process job orchestration, fast 202 release routing gateway, state polling tracking loops, autonomous chronological cron heartbeat engines | Inngest SDK, Node.js Events, Inngest CLI Local Dev Servers, UUID Generation, Cron Schedules |
+
 ---
 
 # 🚀 Project Evolution
@@ -86,8 +88,8 @@ Each assignment extends the existing application rather than creating a complete
 | Week 3 | BE-04 — Containerize Your Stack                        | ✅ Completed   |
 | Week 4 | Authentication — Login & Protect                       | ✅ Completed   |
 | Week 5 | The Polite Scraper                                     | ✅ Completed   |
-| Week 6 | Your First Background Job                              | ⏳ Planned     |
-| Week 6 | Connect to an AI API                                   |  ✅ Completed  |
+| Week 6 | Your First Background Job                              | ✅ Completed   |
+| Week 6 | Connect to an AI API                                   | ✅ Completed   |
 | Week 7 | Build an AI Decision Flow with React Flow + Inngest    | ⏳ Planned     |
 | Week 7 | PDF Report Generator                                   | ⏳ Planned     |
 | Week 7 | Your first background job                              | ⏳ Planned     |
@@ -142,7 +144,10 @@ Throughout this internship, this repository demonstrates progressive backend eng
 - ✅ Git Version Control
 - ✅ GitHub Repository Management
 - ✅ AI-Assisted Development
-- ✅ AI vs Me Implementation Comparison
+- ✅ AI vs Me Implementation Compariso
+- ✅ Background Jobs & Event Orchestration
+- ✅ Chronological Cron Schedules
+
 
 # ⏳ Upcoming Skills
 
@@ -855,6 +860,38 @@ An automated suite executed validation tests sequentially against a static 8-cas
      -d '{"text": "Hey! Your app crashed when I tried to pay, and it took my money! Fix this now!"}'
    ```
 ---
+# ⏱️ Assignment A7 — Your First Background Job (Week 6 Core)
+An out-of-process distributed asynchronous workflow engine was mounted onto our Express backend stack using the Inngest framework lane. This architecture implements the high-velocity "accept-fast, process-decoupled, track-status" design pattern used for resource-heavy workloads.
+
+### 🏗️ Workflow Engine Architecture Block
+  POST /api/reports          GET /api/reports/:id            Inngest Dashboard
+ (Fast 202 Handshake)          (Polling Status Gate)          (Port :8288 Console)
+        │                              │                              │
+        ├──► [Dispatches Event]        ├──► [Checks Memory Store]     ├──► [Tracks Execution Graph]
+        │    report/generate           │    pending or complete       │    Maps retry cascades
+        ▼                              ▼                              ▼
+  Responds in <20ms             Returns live workflow state    Automated 1-Min Cron Heartbeat
+
+### 📋 Decoupled Background Architectural Routes
+1. The Fast Door Gateway (POST /api/reports): Ingests execution requests, instantly seeds an in-memory transactional record mapping, dispatches an asynchronous event token to the local runner, and releases the connection chain in under 20 milliseconds by returning an HTTP 202 Accepted handshake wrapper.
+2. The Status Verification Gate (GET /api/reports/:id): Provides a clean data polling interface layer. It returns a "status": "pending" token string while the report bakes out-of-process, and transforms automatically to "status": "complete" appending compilation payload payloads once finalized.
+
+### 🛠️ Configured Background Worker Functions (src/llm/backgroundJobs.js)
+* say-hello Worker Core: Our initial phase pipeline worker bound to trigger upon receiving incoming test/hello test events.
+* generate-report Heavy Baker: Listens to report/generate events, isolates an 8-second execution sleep step without tying up web request threads, and writes successful state records into the tracking store layer.
+* cron-heartbeat Scheduled Clock Engine: An autonomous chronological job configured using classic 5-field Unix cron mapping expressions (* * * * *). It boots every 60 seconds automatically on the clock, logging continuous pulses independent of user requests.
+* retry-simulation Fault Tolerant Worker: Programmed with restrictive retry parameters (retries: 3) to map error backoff recovery waterfall graphs visually inside our tracking dashboards upon transient failure conditions.
+
+### 🧪 Dual-Terminal Boot Setup & Verification Commands
+1. Spin up the Inngest Background Runner (Terminal Pane #2):
+   npx inngest-cli@latest dev -u http://localhost:3000/api/inngest
+2. Launch the Core Express API Application Server (Terminal Pane #1):
+   npm start
+3. Verify Asynchronous Processing Loop Via Postman:
+   * Submit an HTTP POST request to http://localhost:3000/api/reports to fetch your immediate unique tracking ID string.
+   * Instantly query GET http://localhost:3000/api/reports/YOUR_ID Cache to watch the status shift dynamically from pending to complete after the 8-second step finishes.
+   * Navigate your local web browser interface to http://127.0.0.1:8288 to inspect the real-time execution graphs and monitor automated 60-second cron counter logs!
+
 
 # 🧪 Testing
 
