@@ -69,8 +69,7 @@ This track is being built in parallel with Track 2 and captures the AI-fluency s
 | **BE-04 — Containerize Your Stack** | Week 3 | ✅ Completed | Dockerized API + PostgreSQL, Docker Compose orchestration, named persistent volume, verified container-restart persistence | Docker, Dockerfile, Docker Compose, Docker volumes, environment-variable configuration |
 | **Authentication — Login & Protect (BE-03)** | Week 4 | ✅ Completed | Supabase-backed signup / login / logout endpoints, JWT `access_token` / `refresh_token` issuance, reusable auth middleware, Swagger bearer-auth integration | Supabase Auth, JWT, Express middleware, OpenAPI `securitySchemes` |
 | **BE-05 — The Polite Scraper** | Week 5 | ✅ Completed | Rate-limited, polite scraping pipeline, Zod-validated structured data extraction, generated PDF summary report | Node.js web scraping, Zod schema validation, PDF report generation, nested technical documentation |
-| **BE-07 — Put an LLM Behind Your API** | Week 6 | ⏳ In Progress | OpenAI SDK wired through OpenRouter's free routing pathway, Stage 0 connectivity script (`src/llm/hello.js`) | OpenAI SDK, OpenRouter, Node.js module/environment debugging |
-
+| **BE-07 — Put an LLM Behind Your API** | Week 6 | ✅ Completed | OpenAI SDK wired through OpenRouter's free routing pathway, Stage 0 connectivity script (`src/llm/hello.js`) | OpenAI SDK, OpenRouter, Node.js module/environment debugging |
 | **Assignment A7 — Your First Background Job** | Week 6 | ✅ Completed | Out-of-process job orchestration, fast 202 release routing gateway, state polling tracking loops, autonomous chronological cron heartbeat engines | Inngest SDK, Node.js Events, Inngest CLI Local Dev Servers, UUID Generation, Cron Schedules |
 
 ---
@@ -90,7 +89,7 @@ Each assignment extends the existing application rather than creating a complete
 | Week 5 | The Polite Scraper                                     | ✅ Completed   |
 | Week 6 | Your First Background Job                              | ✅ Completed   |
 | Week 6 | Connect to an AI API                                   | ✅ Completed   |
-| Week 7 | Build an AI Decision Flow with React Flow + Inngest    | ⏳ Planned     |
+| Week 7 | Build an AI Decision Flow with React Flow + Inngest    | ✅ Completed   |
 | Week 7 | PDF Report Generator                                   | ⏳ Planned     |
 | Week 7 | Your first background job                              | ⏳ Planned     |
 | Week 8 | Backend Capstone Documentation & Case Study            | ⏳ Planned     |
