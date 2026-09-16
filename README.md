@@ -6,8 +6,8 @@ This repository is maintained across **two parallel internship tracks**:
 
 | Track | Focus | Status |
 | --- | --- | --- |
-| **Track 1: AI Fluency Workspace** | Prompt engineering blueprints, model benchmarking, and AI-assisted development tooling | 🟡 Scaffolded — content to be published as assignments are completed |
-| **Track 2: Backend AI Engineering Workspace** | System architecture, Express.js servers, database layers, validation, containerization, and test evidence | ✅ Active — Weeks 2–6 documented below |
+| **Track 1: Backend AI Engineering Workspace** | System architecture, Express.js servers, database layers, validation, containerization, and test evidence | ✅ Active — Weeks 2–6 documented below |
+| **Track 2: AI Fluency Workspace** | Prompt engineering blueprints, model benchmarking, and AI-assisted development tooling | 🟡 Scaffolded — content to be published as assignments are completed |
 
 ---
 
@@ -48,17 +48,7 @@ The repository is intentionally maintained as a **single evolving project** so t
 
 ---
 
-# 🧭 Track 1: AI Fluency Workspace
-
-**Focus areas:** prompt engineering blueprints, model benchmarking, and AI-assisted development tools.
-
-This track is being built in parallel with Track 2 and captures the AI-fluency side of the internship — how prompts are designed, how models are compared and benchmarked, and how AI tools are used responsibly inside the engineering workflow.
-
-> **Status note:** Track 1 evidence and write-ups are currently maintained in a separate internal workspace. As each Track 1 assignment is completed and evidenced, its documentation, prompt blueprints, and benchmarking notes will be published here alongside Track 2, following the same stage-by-stage evidence format used below.
-
----
-
-# ⚙️ Track 2: Backend AI Engineering Workspace
+# ⚙️ Track 1: Backend AI Engineering Workspace
 
 # 📋 Assignment Feature & Skills Index
 
