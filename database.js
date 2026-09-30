@@ -1,24 +1,13 @@
 const { Pool } = require("pg");
-require("dotenv").config();
 
-// 🔍 DEBUG CHECK: Confirms if dotenvx or dotenv loaded your keys successfully
-console.log("👉 [DEBUG] DATABASE_URL present:", !!process.env.DATABASE_URL);
-
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
-});
-
-// 👇 CLUADE'S FIX — Captures connection errors so they never crash your process
-pool.on("error", (err) => {
-    console.error("⚠️ [POOL GUARD] Unexpected idle client error handled safely:", err.message);
-});
-
-// ==========================================
-// DATABASE INITIALIZATION
-// ==========================================
-
-async function initializeDatabase() {
+// Make sure the function captures the working pool parameter passed from server.js
+async function initializeDatabase(pool) {
     try {
+        if (!pool) {
+            throw new Error("No database pool instance was provided by server.js");
+        }
+
+        // --- Existing Weeks 1-6 Tasks Table ---
         await pool.query(`
             CREATE TABLE IF NOT EXISTS tasks (
                 id SERIAL PRIMARY KEY,
@@ -26,124 +15,90 @@ async function initializeDatabase() {
                 done INTEGER DEFAULT 0
             )
         `);
-
         console.log("✅ PostgreSQL tasks table ready.");
 
-        await seedDefaultTasks();
+        // ==========================================
+        // WEEK 7 ADDITION: AI Workflows Table
+        // ==========================================
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS ai_workflows (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                raw_graph JSONB NOT NULL,       
+                execution_plan JSONB,           
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log("✅ PostgreSQL ai_workflows table ready.");
 
-    } catch (err) {
-        console.error("❌ Database initialization failed safely:", err.message);
-    }
-}
+        // ==========================================
+        // WEEK 7 ADDITION: BE-08 PDF Report Orders
+        // ==========================================
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS orders (
+                id SERIAL PRIMARY KEY,
+                customer TEXT NOT NULL,
+                product TEXT NOT NULL,
+                amount NUMERIC(10, 2) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log("✅ PostgreSQL orders table ready.");
 
-// ==========================================
-// SEED DEFAULT TASKS
-// ==========================================
+        // ==========================================
+        // WEEK 7 ADDITION: BE-08 PDF Artifact Tracking
+        // ==========================================
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS reports (
+                id SERIAL PRIMARY KEY,
+                path TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log("✅ PostgreSQL reports table ready.");
 
-async function seedDefaultTasks() {
-    try {
-        const result = await pool.query(
-            "SELECT COUNT(*) AS count FROM tasks"
-        );
-
-        const taskCount = Number(result.rows[0].count);
-
-        if (taskCount > 0) {
-            console.log("✅ Existing data found. Skipping seed.");
-            return;
+        // Safe fallback logic passing the pool parameter forward
+        if (typeof seedDefaultTasks === "function") {
+            await seedDefaultTasks(pool);
         }
-
-        console.log("🌱 Seeding default Navigant project tasks...");
-
-        await pool.query(
-            "INSERT INTO tasks (title, done) VALUES ($1, $2)",
-            ["Prepare SDG 4 education workshop materials", 0]
-        );
-
-        await pool.query(
-            "INSERT INTO tasks (title, done) VALUES ($1, $2)",
-            ["Schedule meeting with women mentors for the LeadHer initiative", 0]
-        );
-
-        await pool.query(
-            "INSERT INTO tasks (title, done) VALUES ($1, $2)",
-            ["Publish Navigant Education Consultants website update", 1]
-        );
-
-        console.log("✅ Three default tasks seeded successfully!");
+        await seedMockOrders(pool);
 
     } catch (err) {
-        console.error("❌ Seed failed safely:", err.message);
+        console.error("❌ Database initialization failed safely:", err);
     }
 }
 
-// ==========================================
-// READ OPERATIONS
-// ==========================================
-
-async function getAllTasks() {
-    const result = await pool.query("SELECT * FROM tasks ORDER BY id");
-    return result.rows;
+async function seedMockOrders(pool) {
+    try {
+        if (!pool) return;
+        
+        // Enforce clean dev cycles: wipe old rows so seeding stays at exactly 200 rows
+        await pool.query('TRUNCATE TABLE orders RESTART IDENTITY CASCADE;');
+        
+        const customers = ['Alice Vance', 'Bob Sterling', 'Clara Frost', 'David Vance', 'Elena Rostova', 'Frank Miller'];
+        const products = ['AI Workflow Engine Pro', 'SaaS Analytics Dashboard', 'Headless Browser Cluster', 'Automated PDF Engine', 'Supabase Auth Gateway'];
+        const insertQueries = [];
+        
+        for (let i = 0; i < 200; i++) {
+            const randomCustomer = customers[Math.floor(Math.random() * customers.length)];
+            const randomProduct = products[Math.floor(Math.random() * products.length)];
+            const randomAmount = (Math.random() * (200 - 5) + 5).toFixed(2);
+            const randomDaysAgo = Math.floor(Math.random() * 30);
+            const orderDate = new Date();
+            orderDate.setDate(orderDate.getDate() - randomDaysAgo);
+            
+            insertQueries.push(
+                pool.query(
+                    'INSERT INTO orders (customer, product, amount, created_at) VALUES (\$1, \$2, \$3, \$4)', 
+                    [randomCustomer, randomProduct, randomAmount, orderDate]
+                )
+            );
+        }
+        await Promise.all(insertQueries);
+        console.log("📊 PostgreSQL data initialization complete: 200 mock orders loaded successfully.");
+    } catch (err) {
+        console.error("❌ Failed to seed mock orders:", err.message);
+    }
 }
 
-async function getTaskById(id) {
-    const result = await pool.query("SELECT * FROM tasks WHERE id = $1", [id]);
-    return result.rows[0];
-}
-
-// ==========================================
-// CREATE OPERATION
-// ==========================================
-
-async function createTask(title) {
-    const result = await pool.query(
-        `INSERT INTO tasks (title, done) VALUES ($1, $2) RETURNING *`,
-        [title, 0]
-    );
-    return result.rows[0];
-}
-
-// ==========================================
-// UPDATE OPERATION
-// ==========================================
-
-async function updateTask(id, title, done) {
-    const result = await pool.query(
-        `UPDATE tasks SET title = $1, done = $2 WHERE id = $3 RETURNING *`,
-        [title, done, id]
-    );
-    return result.rows[0];
-}
-
-// ==========================================
-// DELETE OPERATION
-// ==========================================
-
-async function deleteTask(id) {
-    const result = await pool.query(
-        `DELETE FROM tasks WHERE id = $1 RETURNING *`,
-        [id]
-    );
-    return result.rows[0];
-}
-
-// ==========================================
-// START DATABASE INITIALIZATION (PROTECTED INVOKER)
-// ==========================================
-
-// Fire and catch errors cleanly on boot, ensuring Express stays fully operational
-initializeDatabase().catch(err => {
-    console.error("⚠️ [THREAD GUARD] Initial connection dropped, keeping runtime server alive.");
-});
-
-// ==========================================
-// EXPORT DATABASE REPOSITORY
-// ==========================================
-
-module.exports = {
-    getAllTasks,
-    getTaskById,
-    createTask,
-    updateTask,
-    deleteTask
-};
+module.exports = { initializeDatabase, seedMockOrders };
