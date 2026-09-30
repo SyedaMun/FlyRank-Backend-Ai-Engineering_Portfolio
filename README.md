@@ -6,7 +6,7 @@ This repository is maintained across **two parallel internship tracks**:
 
 | Track | Focus | Status |
 | --- | --- | --- |
-| **Track 1: Backend AI Engineering Workspace** | System architecture, Express.js servers, database layers, validation, containerization, and test evidence | ✅ Active — Weeks 2–6 documented below |
+| **Track 1: Backend AI Engineering Workspace** | System architecture, Express.js servers, database layers, validation, containerization, and test evidence | ✅ Active — Weeks 2–7 documented below |
 | **Track 2: AI Fluency Workspace** | Prompt engineering blueprints, model benchmarking, and AI-assisted development tooling | 🟡 Scaffolded — content to be published as assignments are completed |
 
 ---
@@ -52,15 +52,19 @@ The repository is intentionally maintained as a **single evolving project** so t
 
 # 📋 Assignment Feature & Skills Index
 
+# 📋 Assignment Feature & Skills Index
+
 | Assignment | Week | Status | Key Features Built | Skills & Tools Used |
-| --- | --- | --- | --- | --- |
-| **BE-01 — Build Your First CRUD API** | Week 2 | ✅ Completed | RESTful CRUD endpoints for tasks, JSON request/response handling, route parameters (`:id`), request validation, correct HTTP status codes | Node.js, Express.js, REST API design, JSON, API validation, Postman & Swagger UI testing |
-| **BE-02 — Connecting CRUD API to the Database** | Week 3 | ✅ Completed | SQLite → PostgreSQL migration, PostgreSQL repository / data-access layer, automatic table initialization & seeding, parameterized queries | PostgreSQL, `pg` driver, SQL, parameterized queries, DB Browser for SQLite, repository/data-access pattern |
+| :--- | :--- | :--- | :--- | :--- |
+| **BE-01 — Build Your First CRUD API** | Week 2 | ✅ Completed | RESTful CRUD endpoints for tasks, JSON request/response handling, route parameters ( :id ), request validation, correct HTTP status codes | Node.js, Express.js, REST API design, JSON, API validation, Postman & Swagger UI testing |
+| **BE-02 — Connecting CRUD API to the Database** | Week 3 | ✅ Completed | SQLite → PostgreSQL migration, PostgreSQL repository / data-access layer, automatic table initialization & seeding, parameterized queries | PostgreSQL, pg driver, SQL, parameterized queries, DB Browser for SQLite, repository/data-access pattern |
 | **BE-04 — Containerize Your Stack** | Week 3 | ✅ Completed | Dockerized API + PostgreSQL, Docker Compose orchestration, named persistent volume, verified container-restart persistence | Docker, Dockerfile, Docker Compose, Docker volumes, environment-variable configuration |
-| **Authentication — Login & Protect (BE-03)** | Week 4 | ✅ Completed | Supabase-backed signup / login / logout endpoints, JWT `access_token` / `refresh_token` issuance, reusable auth middleware, Swagger bearer-auth integration | Supabase Auth, JWT, Express middleware, OpenAPI `securitySchemes` |
+| **Authentication — Login & Protect (BE-03)** | Week 4 | ✅ Completed | Supabase-backed signup / login / logout endpoints, JWT access_token / refresh_token issuance, reusable auth middleware, Swagger bearer-auth integration | Supabase Auth, JWT, Express middleware, OpenAPI securitySchemes |
 | **BE-05 — The Polite Scraper** | Week 5 | ✅ Completed | Rate-limited, polite scraping pipeline, Zod-validated structured data extraction, generated PDF summary report | Node.js web scraping, Zod schema validation, PDF report generation, nested technical documentation |
-| **BE-07 — Put an LLM Behind Your API** | Week 6 | ✅ Completed | OpenAI SDK wired through OpenRouter's free routing pathway, Stage 0 connectivity script (`src/llm/hello.js`) | OpenAI SDK, OpenRouter, Node.js module/environment debugging |
+| **BE-07 — Put an LLM Behind Your API** | Week 6 | ✅ Completed | OpenAI SDK wired through OpenRouter's free routing pathway, Stage 0 connectivity script (src/llm/hello.js) | OpenAI SDK, OpenRouter, Node.js module/environment debugging |
 | **Assignment A7 — Your First Background Job** | Week 6 | ✅ Completed | Out-of-process job orchestration, fast 202 release routing gateway, state polling tracking loops, autonomous chronological cron heartbeat engines | Inngest SDK, Node.js Events, Inngest CLI Local Dev Servers, UUID Generation, Cron Schedules |
+| **Visual Workflow Engine** | Week 7 | ✅ Completed | React Flow payload processing, graph nodes/edges schema parsing, out-of-process multi-step orchestration | React Flow Graph Parsing, JSONB Execution Plans, Sequential Background Workers |
+| **BE-08 — PDF Report Generator** | Week 7 | ✅ Completed | Playwright-driven HTML to multi-page corporate PDF layout generation, out-of-process Inngest background triggering, automated table seeding | Playwright Engine, Headless Browser Print Clusters, Postgres Aggregations, Indempotent Seeding |
 
 ---
 
@@ -880,6 +884,48 @@ An out-of-process distributed asynchronous workflow engine was mounted onto our 
    * Submit an HTTP POST request to http://localhost:3000/api/reports to fetch your immediate unique tracking ID string.
    * Instantly query GET http://localhost:3000/api/reports/YOUR_ID Cache to watch the status shift dynamically from pending to complete after the 8-second step finishes.
    * Navigate your local web browser interface to http://127.0.0.1:8288 to inspect the real-time execution graphs and monitor automated 60-second cron counter logs!
+
+
+# 🌿 Week 7 — Visual Workflow Execution Engine
+
+A robust backend graph parsing and processing engine built to ingest visual flowcharts (from React Flow) and compile them into out-of-process, step-by-step background execution checklists.
+
+### 📋 Architectural Overview
+* **Graph Parser (`src/utils/workflowParser.js`):** Ingests an unstructured array payload of `nodes` and `edges`, evaluates topological sorting sequences, and outputs a strictly validated linear JSONB `execution_plan`.
+* **Asynchronous Engine (`src/utils/workflowEngine.js`):** Listens for the `api/workflow.requested` message event, initializes the step registry loop, and utilizes Inngest's out-of-process runners to step through each action item with native recovery tracking.
+
+### 🧪 Setup & Event Verification Commands
+1. **Submit Node Payload via Postman:** Send an HTTP `POST` containing your visual graph payload to `http://localhost:3000/api/workflows/trigger`.
+2. **Review Execution Path:** Instantly open your local Inngest Dashboard on `http://localhost:8288` to monitor the sequential task step iterations (`execute-step-nodeId`) compiling live.
+
+---
+
+# 📊 BE-08 — Asynchronous PDF Report Generator
+
+A complete enterprise-grade reporting data pipeline that handles high-scale transactional aggregations from PostgreSQL and renders them into multi-page corporate PDF documents using an out-of-process job cluster.
+
+### 🏗️ The 4-Stage Reporting Pipeline Architecture
+1. **Query (SQL Aggregator):** Uses specialized PostgreSQL mathematical definitions (`COALESCE`, `TO_CHAR::date`, `SUM::float8`) to isolate row totals, calculate revenue matrices, and extract rolling 7-day weekly trends natively inside the isolated container layer.
+2. **Render (Playwright Engine):** Hydrates calculated datasets into a fluid semantic HTML template framework, utilizing print-specific CSS rules to manage layout scaling:
+   ```css
+   thead { display: table-header-group; }  /* Repeats table headers on page splits */
+   tr { break-inside: avoid; }             /* Prevents horizontal data cutoff lines */
+   ```
+3. **Store (Artifact Tracking):** Launches an out-of-process instance using an existing Microsoft Edge driver channel to print the page to a file on disk inside the local `/reports` cache directory before appending path location logs to the database tracking tables.
+4. **Serve (Background Job Handoff):** Listens to `report/generate` event envelopes on Port 8288, executing the intensive layout assembly safely outside the Express request lifecycle to guarantee sub-20ms connection releases.
+
+### 🧪 Execution & Verification Walkthrough
+1. **Fire Background Generation Trigger:**
+   ```bash
+   curl.exe -i -X POST http://localhost:3000/api/reports
+   ```
+2. **Expected Response Matrix:** Returns an immediate `202 Accepted` status envelope holding a unique tracking token ID:
+   ```json
+   { "id": "b1748d5e-c2f2-46bf-8309-ab0a51795a53", "status": "pending" }
+   ```
+3. **Inspect Final Artifact:** Open your explorer to view your polished multi-page report file inside the `/reports` directory tree (`report-[UUID].pdf`).
+
+---
 
 
 # 🧪 Testing
