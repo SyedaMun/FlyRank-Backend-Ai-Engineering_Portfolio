@@ -80,8 +80,8 @@ Each assignment extends the existing application rather than creating a complete
 | Week 6 | Your First Background Job                              | ✅ Completed   |
 | Week 6 | Connect to an AI API                                   | ✅ Completed   |
 | Week 7 | Build an AI Decision Flow with React Flow + Inngest    | ✅ Completed   |
-| Week 7 | PDF Report Generator                                   | ⏳ Planned     |
-| Week 7 | Your first background job                              | ⏳ Planned     |
+| Week 7 | PDF Report Generator                                   | ✅ Completed   |
+| Week 7 | Your first background job                              | ✅ Completed   |
 | Week 8 | Backend Capstone Documentation & Case Study            | ⏳ Planned     |
 
 > **10-Week Internship Roadmap:** The internship is a 10-week learning journey. This table records the backend assignments currently identified in the project roadmap and is updated progressively as each assignment is completed. Future assignments and milestones will be added to the repository as the internship progresses.
@@ -849,7 +849,7 @@ An automated suite executed validation tests sequentially against a static 8-cas
      -d '{"text": "Hey! Your app crashed when I tried to pay, and it took my money! Fix this now!"}'
    ```
 ---
-# ⏱️ Assignment A7 — Your First Background Job (Week 6 Core)
+# ⏱️ Assignment A7 — Your First Background Job (Week 6 & 7 Core)
 An out-of-process distributed asynchronous workflow engine was mounted onto our Express backend stack using the Inngest framework lane. This architecture implements the high-velocity "accept-fast, process-decoupled, track-status" design pattern used for resource-heavy workloads.
 
 ### 🏗️ Workflow Engine Architecture Block

@@ -19,6 +19,7 @@
     "openai": "^7.9.0",
     "pdfkit": "^0.19.1",
     "pg": "^8.22.0",
+    "playwright": "^1.63.0",
     "sqlite3": "^6.0.1",
     "swagger-ui-express": "^5.0.1",
     "zod": "^4.5.4"
